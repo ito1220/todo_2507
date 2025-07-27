@@ -1,17 +1,40 @@
-# study_todo
+# ✅ Flutter ToDoリストアプリ開発記録
 
-A new Flutter project.
+## 🎯 最終目標
+Flutterを使ってToDoリストアプリを作成する。  
+Figmaを用いて、デザインも実装。
 
-## Getting Started
+### 🧩 フェーズ1：基本機能の実装（必須）
+- [x] タスクの追加・削除
+- [x] タスクの完了チェック
+- [x] カテゴリ選択機能（勉強・生活・その他）
+- [x] 締切日の設定（任意）
+- [x] 今日のタスク一覧表示
 
-This project is a starting point for a Flutter application.
+### 🔧 フェーズ2：拡張機能の実装
+- [x] タスクの重要度設定（★1〜3）
+- [x] 達成率計算関数追加
+- [x] 履歴保存つきタスク更新関数追加
 
-A few resources to get you started if this is your first Flutter project:
+### 🧪 フェーズ3：さらに後でやる予定
+- [ ] 通知機能（リマインダー）
+- [ ] カレンダー表示と連携
+- [ ] 設定画面（通知設定、テーマカラーなど）
+- [ ] 応援メッセージ機能
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🎨 FigmaでのUI設計
+- [ ] タスク編集画面の作成
+- [ ] 更新履歴を見る画面の実装
+- [ ] ホーム画面のレイアウト（カテゴリ切替付きタスクリスト）
+- [ ] 追加ダイアログのデザイン（タイトル・カテゴリ・締切）
+- [ ] カラー設計（落ち着いたブルー/グリーン系）
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# todo_2507" 
+## 🔜 今後の計画
+1. 達成率の表示を先に実装（次のステップ）
+2. メモ機能の実装
+3. フェーズ3機能の検討・優先順位づけ
+
+## 🔜 7/28までの予定
+・フェーズ2以降を進めていく
+・ページを更新しても、前回の記録が残るよう修正
+・今日のタスク→タスク一覧に変更
