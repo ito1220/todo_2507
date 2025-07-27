@@ -5,14 +5,16 @@ class TodoTile extends StatelessWidget {
   final Todo todo;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
-  final VoidCallback onEdit; // ← 追加
+  final VoidCallback onEdit;
+  final VoidCallback? onViewHistory;
 
   const TodoTile({
-    super.key,
+    super.key, // これだけでOK
     required this.todo,
     required this.onToggle,
     required this.onDelete,
-    required this.onEdit, // ← 追加
+    required this.onEdit,
+    this.onViewHistory,
   });
 
   @override
@@ -34,11 +36,15 @@ class TodoTile extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: onEdit, // ← 編集ボタン
+            onPressed: onEdit,
           ),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: onDelete,
+          ),
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: onViewHistory != null ? () => onViewHistory!() : null,
           ),
         ],
       ),
