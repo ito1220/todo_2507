@@ -299,15 +299,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   onEdit: () {
                     _showEditTodoDialog(context, todo);
                   },
-                  onViewHistory: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            HistoryScreen(todoId: todo.id),
-                      ),
-                    );
-                  },
+                  // onViewHistory: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           HistoryScreen(todoId: todo.id),
+                  //     ),
+                  //   );
+                  // },
                 );
               },
             ),
