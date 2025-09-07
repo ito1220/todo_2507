@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/todo_provider.dart';
+import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadBackgroundColor();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TodoProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TodoProvider()),
+        ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider), // ここで生成済みのthemeProviderを使う
+      ],
       child: const MyApp(),
     ),
   );

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/todo.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/todo_tile.dart';
-import 'history_screen.dart';
+import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -136,6 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showEditTodoDialog(BuildContext context, Todo todo) {
     final TextEditingController _editTitleController =
         TextEditingController(text: todo.title);
+    final TextEditingController _editMemoController =
+      TextEditingController(text: todo.memo);
+
     String _editCategory = todo.category;
     DateTime? _editDeadline = todo.deadline;
     int _editImportance = todo.importance;
@@ -172,6 +175,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       decoration: const InputDecoration(labelText: 'カテゴリ'),
                     ),
+
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _editMemoController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        labelText: 'メモ',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -240,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       newCategory: _editCategory,
                       newDeadline: _editDeadline,
                       newImportance: _editImportance,
+                      newMemo: _editMemoController.text.trim(),
                     );
 
                     Navigator.of(context).pop();
@@ -256,68 +271,73 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final todoProvider = Provider.of<TodoProvider>(context);
-    final todos = todoProvider.todos;
-    final completionRate = todoProvider.completionRate;
+  final todoProvider = Provider.of<TodoProvider>(context);
+  final themeProvider = Provider.of<ThemeProvider>(context); // ← 追加
+  final todos = todoProvider.todos;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('タスク一覧'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '達成率： ${(completionRate * 100).toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: completionRate,
-                  backgroundColor: Colors.grey[300],
-                  color: Colors.blue,
-                ),
-              ],
-            ),
+  return Scaffold(
+    backgroundColor: themeProvider.backgroundColor, // ← 背景色を反映
+    appBar: AppBar(
+      title: const Text('タスク一覧'),
+      centerTitle: true,
+      leading: PopupMenuButton<Color>(
+        icon: const Icon(Icons.color_lens),
+        onSelected: (color) {
+          themeProvider.changeBackgroundColor(color);
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: ThemeProvider.pastelWhite,
+             child: Text('ホワイト'),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                final todo = todos[index];
-                return TodoTile(
-                  todo: todo,
-                  onToggle: () => todoProvider.toggleTodo(todo.id),
-                  onDelete: () => todoProvider.removeTodo(todo.id),
-                  onEdit: () {
-                    _showEditTodoDialog(context, todo);
-                  },
-                  // onViewHistory: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) =>
-                  //           HistoryScreen(todoId: todo.id),
-                  //     ),
-                  //   );
-                  // },
-                );
-              },
-            ),
+          const PopupMenuItem(
+            value: ThemeProvider.pastelBlue,
+            child: Text('ブルー'),
+           ),
+          const  PopupMenuItem(
+            value: ThemeProvider.pastelGreen,
+            child: Text('グリーン'),
+          ),
+          const PopupMenuItem(
+            value: ThemeProvider.pastelYellow,
+            child: Text('イエロー'),
+          ),
+          const PopupMenuItem(
+            value: ThemeProvider.pastelGrey,
+            child: Text('グレー'),
+          ),
+          const PopupMenuItem(
+            value: ThemeProvider.pastelPink, // ← ピンクを追加
+            child: Text('パステルピンク'),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+    ),
+    body: Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              final todo = todos[index];
+              return TodoTile(
+                todo: todo,
+                onToggle: () => todoProvider.toggleTodo(todo.id),
+                onDelete: () => todoProvider.removeTodo(todo.id),
+                onEdit: () {
+                  _showEditTodoDialog(context, todo);
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddTodoDialog(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 }
+

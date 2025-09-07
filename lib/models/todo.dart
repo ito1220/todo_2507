@@ -11,6 +11,8 @@ class Todo {
   int importance; // ★1〜3 の重要度
   List<TodoHistory> history; // ← 履歴を保存するリスト
 
+   String memo;
+
   Todo({
     required this.id,
     required this.title,
@@ -19,6 +21,7 @@ class Todo {
     this.isDone = false,
     this.importance = 1,
     this.history = const [],
+    this.memo = '',
   });
 
   Todo copyWith({
@@ -29,6 +32,7 @@ class Todo {
     bool? isDone,
     int? importance,
     List<TodoHistory>? history,
+    String? memo
   }) {
     return Todo(
       id: id ?? this.id,
@@ -38,6 +42,7 @@ class Todo {
       isDone: isDone ?? this.isDone,
       importance: importance ?? this.importance,
       history: history ?? this.history,
+      memo: memo ?? this.memo,
     );
   }
 
@@ -51,6 +56,7 @@ class Todo {
       'isDone': isDone,
       'importance': importance,
       'history': history.map((h) => h.toJson()).toList(),
+      'memo': memo,
     };
   }
 
@@ -66,6 +72,7 @@ class Todo {
       history: json['history'] != null
           ? (json['history'] as List).map((h) => TodoHistory.fromJson(h)).toList()
           : [],
+      memo: json['memo'] ?? '',
     );
   }
 }

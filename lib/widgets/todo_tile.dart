@@ -42,10 +42,6 @@ class TodoTile extends StatelessWidget {
             icon: const Icon(Icons.delete),
             onPressed: onDelete,
           ),
-          // IconButton(
-          //   icon: const Icon(Icons.history),
-          //   onPressed: onViewHistory != null ? () => onViewHistory!() : null,
-          // ),
         ],
       ),
     );
