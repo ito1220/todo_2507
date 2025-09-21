@@ -7,6 +7,7 @@ class TodoTile extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final VoidCallback? onViewHistory;
+  final VoidCallback onViewMemo;
 
   const TodoTile({
     super.key, // これだけでOK
@@ -15,6 +16,7 @@ class TodoTile extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     this.onViewHistory,
+    required this.onViewMemo, 
   });
 
   @override
@@ -37,6 +39,10 @@ class TodoTile extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: onEdit,
+          ),
+          IconButton(
+            icon: const Icon(Icons.note), // メモアイコン
+            onPressed: onViewMemo,
           ),
           IconButton(
             icon: const Icon(Icons.delete),

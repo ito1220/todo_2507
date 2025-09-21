@@ -269,6 +269,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+    // ✅ 追加：メモ表示用ダイアログ
+  void _showMemoDialog(BuildContext context, Todo todo) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('メモ'),
+        content: Text(todo.memo.isNotEmpty ? todo.memo : 'メモはありません'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('閉じる'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
   final todoProvider = Provider.of<TodoProvider>(context);
@@ -326,6 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onDelete: () => todoProvider.removeTodo(todo.id),
                 onEdit: () {
                   _showEditTodoDialog(context, todo);
+                },
+                onViewMemo: () {
+                 _showMemoDialog(context, todo); // ← ここでメモ表示ダイアログを呼ぶ
                 },
               );
             },
