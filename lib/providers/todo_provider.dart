@@ -5,14 +5,66 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/todo.dart';
 
+// 並び替え方法を定義
+enum SortOption {
+  byCreated,
+  byImportance,
+  byDeadline,
+}
+
 //UI にデータ変更を通知
 class TodoProvider extends ChangeNotifier {
   List<Todo> _todos = [];
 
+  SortOption _sortOption = SortOption.byCreated; // 🔸 並び替えの初期状態
+  String _searchKeyword = ''; // 🔍 検索キーワード
+
   List<Todo> get todos => _todos;
+  SortOption get sortOption => _sortOption;
+  String get searchKeyword => _searchKeyword;
+
+  List<Todo> get filteredTodos {
+    List<Todo> filtered = [..._todos];
+
+    if (_searchKeyword.isNotEmpty) {
+      filtered = filtered.where((todo) =>
+        todo.title.contains(_searchKeyword) ||
+        todo.category.contains(_searchKeyword)
+      ).toList();
+    }
+
+    switch (_sortOption) {
+      case SortOption.byImportance:
+        filtered.sort((a, b) => b.importance.compareTo(a.importance));
+        break;
+      case SortOption.byDeadline:
+        filtered.sort((a, b) {
+          if (a.deadline == null) return 1;
+          if (b.deadline == null) return -1;
+          return a.deadline!.compareTo(b.deadline!);
+        });
+        break;
+      case SortOption.byCreated:
+        break;
+    }
+
+    return filtered;
+  }
+
+  void updateSortOption(SortOption option) {
+    _sortOption = option;
+    _saveSortOption(); //保存処理
+    notifyListeners();
+  }
+
+  void updateSearchKeyword(String keyword) {
+    _searchKeyword = keyword;
+    notifyListeners();
+  }
 
   TodoProvider() {
     _loadTodos(); // ローカルに保存されたタスクデータを読み込み
+    _loadSortOption();
   }
 
   void addTodo(Todo todo) {
@@ -96,10 +148,16 @@ class TodoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
- //タスク完了率の計算
-  double get completionRate {
-    if (_todos.isEmpty) return 0.0;
-    final completedCount = _todos.where((todo) => todo.isDone).length;
-    return completedCount / _todos.length;
+  Future<void> _saveSortOption() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('sortOption', _sortOption.index); // enum を int で保存
   }
+
+  Future<void> _loadSortOption() async {
+    final prefs = await SharedPreferences.getInstance();
+    final index = prefs.getInt('sortOption');
+    if (index != null && index >= 0 && index < SortOption.values.length) {
+      _sortOption = SortOption.values[index];
+  }
+}
 }

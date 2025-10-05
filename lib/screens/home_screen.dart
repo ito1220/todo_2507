@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
   final todoProvider = Provider.of<TodoProvider>(context);
   final themeProvider = Provider.of<ThemeProvider>(context); // ← 追加
-  final todos = todoProvider.todos;
+  final todos = todoProvider.filteredTodos;
 
   return Scaffold(
     backgroundColor: themeProvider.backgroundColor, // ← 背景色を反映
@@ -329,9 +329,81 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      actions: [
+        PopupMenuButton<SortOption>(
+          icon: const Icon(Icons.sort), // 並び替えアイコン
+          onSelected: (option) {
+            Provider.of<TodoProvider>(context, listen: false)
+                .updateSortOption(option);
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(
+              value: SortOption.byCreated,
+              child: Text('作成順'),
+            ),
+            PopupMenuItem(
+              value: SortOption.byImportance,
+              child: Text('重要度'),
+            ),
+            PopupMenuItem(
+              value: SortOption.byDeadline,
+              child: Text('締切日'),
+            ),
+          ],
+        ),
+      ],
     ),
     body: Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: const InputDecoration(
+              labelText: '検索（タイトル or カテゴリ）',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.search),
+            ),
+            onChanged: (value) {
+              Provider.of<TodoProvider>(context, listen: false)
+                  .updateSearchKeyword(value);
+            },
+          ),
+        ),
+
+        // 🔽 並び替えメニュー ←★ここに入れる！
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: [
+          const Text('並び替え:'),
+          const SizedBox(width: 10),
+          DropdownButton<SortOption>(
+            value: todoProvider.sortOption,
+            onChanged: (SortOption? newValue) {
+              if (newValue != null) {
+                Provider.of<TodoProvider>(context, listen: false)
+                    .updateSortOption(newValue);
+              }
+            },
+            items: const [
+              DropdownMenuItem(
+                value: SortOption.byCreated,
+                child: Text('作成順'),
+              ),
+              DropdownMenuItem(
+                value: SortOption.byImportance,
+                child: Text('重要度'),
+              ),
+              DropdownMenuItem(
+                value: SortOption.byDeadline,
+                child: Text('締切日'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+
         Expanded(
           child: ListView.builder(
             itemCount: todos.length,
