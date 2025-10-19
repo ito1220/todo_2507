@@ -329,47 +329,55 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      actions: [
-        PopupMenuButton<SortOption>(
-          icon: const Icon(Icons.sort), // 並び替えアイコン
-          onSelected: (option) {
-            Provider.of<TodoProvider>(context, listen: false)
-                .updateSortOption(option);
-          },
-          itemBuilder: (context) => const [
-            PopupMenuItem(
-              value: SortOption.byCreated,
-              child: Text('作成順'),
-            ),
-            PopupMenuItem(
-              value: SortOption.byImportance,
-              child: Text('重要度'),
-            ),
-            PopupMenuItem(
-              value: SortOption.byDeadline,
-              child: Text('締切日'),
-            ),
-          ],
-        ),
-      ],
+      // actions: [
+      //   PopupMenuButton<SortOption>(
+      //     icon: const Icon(Icons.sort), // 並び替えアイコン
+      //     onSelected: (option) {
+      //       Provider.of<TodoProvider>(context, listen: false)
+      //           .updateSortOption(option);
+      //     },
+      //     itemBuilder: (context) => const [
+      //       PopupMenuItem(
+      //         value: SortOption.byCreated,
+      //         child: Text('作成順'),
+      //       ),
+      //       PopupMenuItem(
+      //         value: SortOption.byImportance,
+      //         child: Text('重要度'),
+      //       ),
+      //       PopupMenuItem(
+      //         value: SortOption.byDeadline,
+      //         child: Text('締切日'),
+      //       ),
+      //     ],
+      //   ),
+      // ],
     ),
     body: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: const InputDecoration(
-              labelText: '検索（タイトル or カテゴリ）',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.search),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Align(
+            alignment: Alignment.centerLeft, // ← 左寄せ
+            child: SizedBox(
+              width: 320, // ← 幅を固定（好みで調整。例: 280〜350くらい）
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: '検索（タイトル or カテゴリ）',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                ),
+                onChanged: (value) {
+                  Provider.of<TodoProvider>(context, listen: false)
+                      .updateSearchKeyword(value);
+                },
+              ),
             ),
-            onChanged: (value) {
-              Provider.of<TodoProvider>(context, listen: false)
-                  .updateSearchKeyword(value);
-            },
           ),
         ),
-
         // 🔽 並び替えメニュー ←★ここに入れる！
     Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
